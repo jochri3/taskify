@@ -5,4 +5,5 @@ COPY package*.json ./
 COPY pnpm-lock.yaml ./
 RUN pnpm i
 COPY . .
+RUN echo "DATABASE_URL=postgresql://root:pass123@postgres:5432/postgres?schema=public">>.env
 CMD ["pnpm","start:dev"]

@@ -16,7 +16,11 @@ export class ContactsService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} contact`;
+    return this.prisma.contact.findFirst({
+      where:{
+        id
+      }
+    });
   }
 
   update(id: number, updateContactDto: UpdateContactDto) {
