@@ -1,7 +1,9 @@
 FROM node:16-alpine
 RUN npm install -g pnpm
+#RUN npm install -g @angular/cli@latest
 WORKDIR /app
 COPY package*.json ./
 RUN pnpm i
 COPY . .
-CMD ["pnpm","start"]
+CMD ["pnpm", "start", "-o", "--host", "0.0.0.0", "--poll", "2000"]
+

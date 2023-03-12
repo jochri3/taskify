@@ -20,6 +20,10 @@ services:
       - ./client:/app
     environment:
       - WDS_SOCKET_PORT=0
+    depends_on:
+      - api
+#    ports:
+#      - "4200:4200"
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -29,6 +33,10 @@ services:
       - ./api:/app
     environment:
       DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - postgres
+#    expose:
+#      - "3000:3000"
 
   postgres:
     image: postgres:latest
