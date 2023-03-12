@@ -8,7 +8,7 @@ DATABASE_URL=<your database url>
 POSTGRES_USER=<your database user>
 POSTGRES_PASSWORD=<your database password>
  ```
-2. Open the terminal et type 
+2. Open the terminal and type 
 ```
 docker compose --env-file ./api/.env -f docker-compose-dev.yml up
 ```
