@@ -1,9 +1,19 @@
 FROM node:16-alpine
+
+RUN apk update
+
+RUN apk add vim
+
 RUN npm install -g pnpm
+
 WORKDIR /app
+
 COPY package*.json ./
-COPY pnpm-lock.yaml ./
-COPY .env.docker ./
+
 RUN pnpm i
+
 COPY . .
-CMD ["pnpm","start:dev"]
+
+RUN pnpm build
+
+CMD ["node","dist/main.js"]

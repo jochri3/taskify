@@ -1,0 +1,26 @@
+CREATE TYPE task_status AS ENUM('TODO', 'IN_PROGRESS', 'DONE', 'BLOCKED');
+
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT ('now'::TEXT)::TIMESTAMP(6) WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT ('now'::TEXT)::TIMESTAMP(6) WITH TIME ZONE NOT NULL,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(20) UNIQUE,
+    CONSTRAINT check_email_or_phone_not_null CHECK (email IS NOT NULL OR phone IS NOT NULL)
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+    id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT ('now'::TEXT)::TIMESTAMP(6) WITH TIME ZONE NOT NULL,
+    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT ('now'::TEXT)::TIMESTAMP(6) WITH TIME ZONE NOT NULL,
+    start_date DATE,
+    end_date DATE NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    status task_status NOT NULL DEFAULT 'TODO',
+    assigned_by  INT NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    assigned_to  INT REFERENCES users(id) ON DELETE SET NULL,
+    CONSTRAINT check_end_date_gt_start_date CHECK (end_date > start_date)
+);

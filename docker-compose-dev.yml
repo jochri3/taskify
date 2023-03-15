@@ -1,49 +1,43 @@
 version: "3"
 
 services:
-  nginx:
-    depends_on:
-      - api
-      - client
-    restart: always
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
-    ports:
-      - "80:80"
-  client:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
-    environment:
-      - WDS_SOCKET_PORT=0
-    depends_on:
-      - api
+#  nginx:
+#    depends_on:
+#      - api
+##      - client
+#    restart: always
+#    build:
+#      dockerfile: Dockerfile.dev
+#      context: ./nginx
 #    ports:
-#      - "4200:4200"
-  api:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./api
-    volumes:
-      - /app/node_modules
-      - ./api:/app
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-    depends_on:
-      - postgres
+#      - "80:80"
+#  api:
+#    container_name: taskify_api
+#    env_file:
+#      - './api/.env.docker'
+#    build:
+#      dockerfile: Dockerfile.dev
+#      context: ./api
+#    volumes:
+#      - /app/node_modules
+#      - ./api:/app
+#    environment:
+#      DATABASE_URL: ${DATABASE_URL}
+#    depends_on:
+#      - db
 #    expose:
 #      - "3000:3000"
 
-  postgres:
+  db:
     image: postgres:latest
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "5555:5432"
 
-
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: always

@@ -1,23 +1,62 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
+  schemas  = ["public", "auth"]
 }
 
-model Contact{
-  id Int @id @default(autoincrement())
-  firstName String @db.VarChar(50) @map("first_name")
-  lastName String @db.VarChar(50) @map("last_name")
-  email String @db.VarChar(100)
-  phoneNumber String @db.VarChar(20) @map("phone_number")
-  companyName String @db.VarChar(30) @map("company_name")
-  position String @db.VarChar(100)
+model Task {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  startDate   DateTime? @map("start_date")
+  endDate     DateTime  @map("end_date")
+  title       String    @db.VarChar(200)
+  description String?
+  status      TaskStatus @default(TODO)
+  assignedBy  User      @relation("tasksAssignedBy", fields: [assignedById], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  assignedTo  User?     @relation("tasksAssignedTo", fields: [assignedToId], references: [id], onUpdate: NoAction)
+  assignedById Int  @map("assigned_by_id")
+  assignedToId Int? @map("assigned_to_id")
 
-  @@map("contacts")
+  @@map("tasks")
+  @@schema("public")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  firstName   String    @db.VarChar(50) @map("first_name")
+  lastName    String    @db.VarChar(50)  @map("last_name")
+  email       String   @unique @db.VarChar(100)
+  password String?
+  role      Roles? @default(Regular)
+  googleId String? @unique @db.VarChar(255)
+  phone       String?   @unique @db.VarChar(20)
+  tasksAssignedBy  Task[] @relation("tasksAssignedBy")
+  tasksAssignedTo  Task[] @relation("tasksAssignedTo")
+
+  @@map("users")
+  @@schema("auth")
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  BLOCKED
+  @@map("task_status")
+  @@schema("public")
+}
+
+enum Roles {
+  Regular
+  Admin
+  @@map("roles")
+  @@schema("auth")
 }
