@@ -68,10 +68,18 @@ $ pnpm migrate <migration_name>
 
 # Update types
 $ pnpm generate_types
+```
 
-# Run prisma studio
+## Prisma Studio(Visual Database editor)
+```
 $ pnpm studio
 ```
+
+## API DOC(Swagger)
+```
+http://localhost:3000/api
+```
+
 
 ## License
 
