@@ -9,10 +9,13 @@ export class TasksService {
   constructor(private readonly prisma:PrismaService) {
   }
   create(createTaskDto: CreateTaskDto,activeUser:ActiveUserData) {
+    const {startDate,endDate,...rest}=createTaskDto;
     return this.prisma.task.create({
       data:{
         assignedById:activeUser.sub,
-        ...createTaskDto
+        startDate:new Date(startDate),
+        endDate:new Date(endDate),
+        ...rest
       }
     })
   }
@@ -20,7 +23,7 @@ export class TasksService {
   async findAll(activeUser:ActiveUserData) {
     return this.prisma.task.findMany({
       where:{
-        AND:[
+        OR:[
           {assignedById:activeUser.sub},
           {assignedToId:activeUser.sub}
         ]

@@ -1,5 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
-import { IsInt, IsString} from "class-validator";
+import {IsInt, IsNotEmpty, IsString, ValidateIf, ValidateNested} from "class-validator";
+import {Transform,Type} from "class-transformer"
 import {TaskStatus} from "@prisma/client"
 
 export class CreateTaskDto {
@@ -20,10 +21,11 @@ export class CreateTaskDto {
     assignedToId:number
 
     @ApiProperty()
-    @IsString()
+    @IsNotEmpty()
+    // @Transform(({value})=>new Date(value))
     startDate:string
 
     @ApiProperty()
-    @IsString()
+    @IsNotEmpty()
     endDate:string
 }
