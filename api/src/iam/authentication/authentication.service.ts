@@ -37,6 +37,12 @@ export class AuthenticationService {
           lastName: signUpDto.lastName,
           email: signUpDto.email,
           password: hash
+        },
+        select:{
+          id:true,
+          firstName: true,
+          lastName: true,
+          email:true
         }
       });
     } catch (err) {
