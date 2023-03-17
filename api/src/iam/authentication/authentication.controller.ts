@@ -5,7 +5,9 @@ import {AuthenticationService} from './authentication.service';
 import {Auth} from "./decorators/auth.decorator";
 import {AuthType} from "./enums/auth-type.enums";
 import {RefreshTokenDto} from "./dto/refresh-token.dto";
-import {ApiTags} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags} from "@nestjs/swagger";
+import {UserEntity} from "../../users/user.entity";
+import {SigninResponse} from "./@types/response.types";
 
 
 
@@ -16,12 +18,14 @@ export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
   @Post('sign-up')
+  @ApiCreatedResponse({type:UserEntity})
   signUp(@Body() signUpDto: SignUpDto) {
     return this.authService.signUp(signUpDto);
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
+  @ApiOkResponse({type:SigninResponse})
   async signIn(
     @Body() signInDto: SignInDto,
   ) {
@@ -30,6 +34,7 @@ export class AuthenticationController {
 
   @HttpCode(HttpStatus.OK)
   @Post('refresh-tokens')
+  @ApiOkResponse({type:SigninResponse})
   refeshTokens(@Body() refreshTokenDto:RefreshTokenDto){
     return this.authService.refreshTokens(refreshTokenDto)
   }

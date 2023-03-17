@@ -44,13 +44,14 @@ export class TasksService {
   }
 
   async update(id: number, updateTaskDto: UpdateTaskDto,activeUser:ActiveUserData) {
+
     await this.findOne(id,activeUser)
 
     return this.prisma.user.update({
       where:{
         id
       },
-      data:{...updateTaskDto}
+      data:updateTaskDto
     })
   }
 

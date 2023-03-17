@@ -2,7 +2,7 @@ import {User,Roles} from "@prisma/client";
 import {ApiProperty} from "@nestjs/swagger";
 
 
-export class UserEntity implements  User{
+export class UserEntity implements  Partial<User>{
   @ApiProperty()
   id: number;
 
@@ -11,23 +11,16 @@ export class UserEntity implements  User{
 
   @ApiProperty()
   lastName: string;
+
+  @ApiProperty()
   phone: string;
 
   @ApiProperty()
   email: string;
 
   @ApiProperty()
-  password: string;
-
-  @ApiProperty()
   role: Roles;
 
   @ApiProperty()
   googleId:string
-
-  @ApiProperty()
-  createdAt: Date;
-
-  @ApiProperty()
-  updatedAt: Date;
 }
