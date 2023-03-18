@@ -22,15 +22,27 @@ JWT_REFRESH_TOKEN_TTL=<YOUR_REFRESH_TOKEN_TTL eg: 86400>
 GOOGLE_CLIENT_ID=<YOUR_GOOGLE_ID>
 GOOGLE_CLIENT_SECRET=<YOUR_GOOGLE_SECRET>
  ```
-2. Open the terminal and type 
+2. Start `postgres` and `redis` inside a docker container using the development `docker-compose-dev.yml` file
 ```
 docker compose --env-file ./api/.env -f docker-compose-dev.yml up
 ```
 
-## Installation
+## Installations
 
 ```bash
+# Install pnpm package manager(But you can still use npm)
+$ npm i -g pnpm
+```
+
+```bash
+# Reinstall dependencies
 $ pnpm install
+```
+
+
+```bash
+# Run database migrations for existing migration files
+$  pnpx prisma migrate dev
 ```
 
 ## Running the app
