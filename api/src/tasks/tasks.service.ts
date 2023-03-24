@@ -45,6 +45,7 @@ export class TasksService {
     if(!task){
       throw new TaskNotFoundException(id)
     }
+    return task
   }
 
   async update(
@@ -53,7 +54,7 @@ export class TasksService {
     activeUser: ActiveUserData,
   ) {
     await this.findOne(id, activeUser);
-    return this.prisma.user.update({
+    return this.prisma.task.update({
       where: {
         id,
       },
@@ -69,7 +70,7 @@ export class TasksService {
     });
 
     if (!task) {
-      throw new Error(`Task with it #${id} does not exist`);
+      throw new TaskNotFoundException(id);
     }
 
     return this.prisma.task.delete({
