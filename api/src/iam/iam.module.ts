@@ -12,8 +12,7 @@ import { AuthenticationGuard } from './authentication/guards/authentication.guar
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
 import { GoogleAuthenticationService } from './authentication/social/google-authentication.service';
 import { GoogleAuthenticationController } from './authentication/social/google-authentication.controller';
-import {PrismaModule} from "../prisma/prisma.module";
-
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   providers: [
@@ -28,7 +27,7 @@ import {PrismaModule} from "../prisma/prisma.module";
   imports: [
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
-    PrismaModule
+    PrismaModule,
   ],
 
   controllers: [AuthenticationController, GoogleAuthenticationController],

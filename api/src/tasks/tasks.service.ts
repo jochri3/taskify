@@ -30,28 +30,38 @@ export class TasksService {
     });
   }
 
+  // findOne(id: number, activeUser: ActiveUserData) {
+  //   return this.prisma.task.findFirstOrThrow({
+  //     where: {
+  //       id,
+  //       OR: [
+  //         { assignedById: activeUser.sub },
+  //         { assignedToId: activeUser.sub },
+  //       ],
+  //     },
+  //   });
+  // }
+
   findOne(id: number, activeUser: ActiveUserData) {
-    return this.prisma.task.findFirstOrThrow({
+    return this.prisma.task.findUnique({
       where: {
         id,
-        OR: [
-          { assignedById: activeUser.sub },
-          { assignedToId: activeUser.sub },
-        ],
       },
     });
   }
 
-
-  async update(id: number, updateTaskDto: UpdateTaskDto,activeUser:ActiveUserData) {
-
-    await this.findOne(id,activeUser)
+  async update(
+    id: number,
+    updateTaskDto: UpdateTaskDto,
+    activeUser: ActiveUserData,
+  ) {
+    await this.findOne(id, activeUser);
     return this.prisma.user.update({
       where: {
         id,
       },
-      data:updateTaskDto
-    })
+      data: updateTaskDto,
+    });
   }
 
   async remove(id: number, activeUser: ActiveUserData) {

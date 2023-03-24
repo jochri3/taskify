@@ -44,17 +44,30 @@ export class TasksController {
     return this.tasksService.findAll(activeUser);
   }
 
+  // @Get(':id')
+  // @ApiOkResponse({ type: TaskEntity })
+  // async findOne(
+  //   @Param('id') id: string,
+  //   @ActiveUser() activeUser: ActiveUserData,
+  // ) {
+  //   try {
+  //   return await this.tasksService.findOne(+id, activeUser);
+  //   } catch (e) {
+  //     throw new NotFoundException();
+  //   }
+  // }
+
   @Get(':id')
-  @ApiCreatedResponse({ type: TaskEntity })
+  @ApiOkResponse({ type: TaskEntity })
   async findOne(
     @Param('id') id: string,
     @ActiveUser() activeUser: ActiveUserData,
   ) {
-    try {
-      return await this.tasksService.findOne(+id, activeUser);
-    } catch (e) {
-      throw new NotFoundException();
+    const task = await this.tasksService.findOne(+id, activeUser);
+    if (!task) {
+      throw new NotFoundException(`Task with id #${id} doesn't exist.`);
     }
+    return task;
   }
 
   @Patch(':id')
