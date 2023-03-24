@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  NotFoundException,
+  NotFoundException, UseFilters,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -22,10 +22,12 @@ import {
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { ActiveUser } from '../iam/decorators/active-user.decorator';
 import { TaskEntity } from './entities/task.entity';
+import {NotFoundExceptionFilterFilter} from "../exceptions/not-found-exception-filter.filter";
 
 @ApiTags('tasks')
 @ApiBearerAuth()
 @Controller('tasks')
+@UseFilters(NotFoundExceptionFilterFilter)
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -44,30 +46,13 @@ export class TasksController {
     return this.tasksService.findAll(activeUser);
   }
 
-  // @Get(':id')
-  // @ApiOkResponse({ type: TaskEntity })
-  // async findOne(
-  //   @Param('id') id: string,
-  //   @ActiveUser() activeUser: ActiveUserData,
-  // ) {
-  //   try {
-  //   return await this.tasksService.findOne(+id, activeUser);
-  //   } catch (e) {
-  //     throw new NotFoundException();
-  //   }
-  // }
-
   @Get(':id')
   @ApiOkResponse({ type: TaskEntity })
-  async findOne(
+  findOne(
     @Param('id') id: string,
     @ActiveUser() activeUser: ActiveUserData,
   ) {
-    const task = await this.tasksService.findOne(+id, activeUser);
-    if (!task) {
-      throw new NotFoundException(`Task with id #${id} doesn't exist.`);
-    }
-    return task;
+    return this.tasksService.findOne(+id, activeUser);
   }
 
   @Patch(':id')

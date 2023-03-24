@@ -3,6 +3,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { PrismaService } from '../prisma/prisma.service';
+import {TaskNotFoundException} from "./exceptions/task-not-found.exception";
 
 @Injectable()
 export class TasksService {
@@ -30,24 +31,20 @@ export class TasksService {
     });
   }
 
-  // findOne(id: number, activeUser: ActiveUserData) {
-  //   return this.prisma.task.findFirstOrThrow({
-  //     where: {
-  //       id,
-  //       OR: [
-  //         { assignedById: activeUser.sub },
-  //         { assignedToId: activeUser.sub },
-  //       ],
-  //     },
-  //   });
-  // }
 
-  findOne(id: number, activeUser: ActiveUserData) {
-    return this.prisma.task.findUnique({
+  async findOne(id: number, activeUser: ActiveUserData) {
+    const task=await this.prisma.task.findFirst({
       where: {
         id,
+        OR: [
+          { assignedById: activeUser.sub },
+          { assignedToId: activeUser.sub },
+        ],
       },
     });
+    if(!task){
+      throw new TaskNotFoundException(id)
+    }
   }
 
   async update(
